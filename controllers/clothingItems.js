@@ -26,7 +26,7 @@ const deleteItem = (req, res) => {
 
       if (userId !== ownerId) {
         return res
-          .status(forbiddenError)
+          .status(500)
           .send({ message: "You don't have permission to delete this item" });
       }
       return ClothingItem.findByIdAndDelete(itemId)
