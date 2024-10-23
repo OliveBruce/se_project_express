@@ -1,0 +1,13 @@
+const REQUEST_CREATED = 201;
+const BAD_REQUEST = 400;
+const FORBIDDEN_REQUEST = 403;
+const NOT_FOUND = 404;
+const DEFAULT = 500;
+
+module.exports = {
+  REQUEST_CREATED,
+  BAD_REQUEST,
+  FORBIDDEN_REQUEST,
+  NOT_FOUND,
+  DEFAULT,
+};
