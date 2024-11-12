@@ -12,7 +12,7 @@ const createItem = (req, res) => {
   const owner = req.user._id;
 
   ClothingItem.create({ name, weather, imageUrl, owner })
-    .then((item) => res.status(REQUEST_CREATED).send(item))
+    .then((item) => res.status(201).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
@@ -62,15 +62,16 @@ const getItems = (req, res) => {
 };
 
 const likeItem = (req, res) => {
+  const userId = req.user._id;
   const { itemId } = req.params;
 
   ClothingItem.findByIdAndUpdate(
     itemId,
-    { $addToSet: { likes: req.user._id } },
+    { $addToSet: { likes: userId } },
     { new: true }
   )
     .orFail()
-    .then((item) => res.send(item))
+    .then((item) => res.send({ data: item }))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
