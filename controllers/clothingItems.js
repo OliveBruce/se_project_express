@@ -1,5 +1,6 @@
 const ClothingItem = require("../models/clothingItem");
 const {
+  REQUEST_CREATED,
   FORBIDDEN_REQUEST,
   BAD_REQUEST,
   NOT_FOUND,
@@ -11,13 +12,15 @@ const createItem = (req, res) => {
   const owner = req.user._id;
 
   ClothingItem.create({ name, weather, imageUrl, owner })
-    .then((item) => res.status(201).send(item))
+    .then((item) => res.status(REQUEST_CREATED).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(DEFAULT).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -47,7 +50,9 @@ const deleteItem = (req, res) => {
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(DEFAULT).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -56,7 +61,9 @@ const getItems = (req, res) => {
     .then((items) => res.send(items))
     .catch((err) => {
       console.error(err);
-      return res.status(DEFAULT).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -79,7 +86,9 @@ const likeItem = (req, res) => {
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(DEFAULT).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -101,7 +110,9 @@ const deleteLike = (req, res) => {
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(DEFAULT).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 

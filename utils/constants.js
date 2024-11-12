@@ -5,7 +5,6 @@ const FORBIDDEN_REQUEST = 403;
 const NOT_FOUND = 404;
 const CONFLICT = 409;
 const DEFAULT = 500;
-const DUPE_ERROR = 11000;
 
 module.exports = {
   REQUEST_CREATED,
@@ -15,5 +14,4 @@ module.exports = {
   NOT_FOUND,
   CONFLICT,
   DEFAULT,
-  DUPE_ERROR,
 };

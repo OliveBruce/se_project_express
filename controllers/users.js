@@ -39,10 +39,9 @@ const createUser = (req, res) => {
         };
         return res.status(201).send(userData);
       }
-      return res.status(DEFAULT).send({ message: " Failed to create user" });
     })
     .catch((err) => {
-      if (err === "User already exists!") {
+      if (err.message === "User already exists!") {
         return res.status(CONFLICT).send({ message: "Email already exists" });
       }
       console.error("ERROR CODE:", err.code);
@@ -52,7 +51,7 @@ const createUser = (req, res) => {
         return res.status(BAD_REQUEST).send({ message: "Invalid data passed" });
       }
 
-      return res.status(CONFLICT).send({
+      return res.status(DEFAULT).send({
         message: "An error occurred while creating the user.",
       });
     });
@@ -81,7 +80,7 @@ const getCurrentUser = (req, res) => {
 
       return res
         .status(DEFAULT)
-        .send({ message: "An error has occurred on the server" });
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -109,7 +108,9 @@ const login = (req, res) => {
           .status(UNAUTHORIZED_ERROR)
           .send({ message: "Incorrect email or password" });
       }
-      return res.status(DEFAULT).send({ message: err.message });
+      return res
+        .status(DEFAULT)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -136,7 +137,7 @@ const updateUserInfo = (req, res) => {
 
       return res
         .status(DEFAULT)
-        .send({ message: "An error has occurred on the server" });
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
