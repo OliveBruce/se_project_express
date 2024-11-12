@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const {
+  REQUEST_CREATED,
   BAD_REQUEST,
   UNAUTHORIZED_ERROR,
   NOT_FOUND,
@@ -30,15 +31,13 @@ const createUser = (req, res) => {
       });
     })
     .then((user) => {
-      if (user) {
-        const userData = {
-          name: user.name,
-          avatar: user.avatar,
-          email: user.email,
-          _id: user._id,
-        };
-        return res.status(201).send(userData);
-      }
+      const userData = {
+        name: user.name,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user._id,
+      };
+      return res.status(REQUEST_CREATED).send(userData);
     })
     .catch((err) => {
       if (err.message === "User already exists!") {
