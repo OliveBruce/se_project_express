@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const { JWT_SECRET } = require("../utils/config.js");
+const { JWT_SECRET } = require("../utils/config");
 const {
   BAD_REQUEST,
   UNAUTHORIZED_ERROR,

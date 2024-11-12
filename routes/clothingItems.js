@@ -6,7 +6,7 @@ const {
   deleteItem,
   likeItem,
   deleteLike,
-} = require("../controllers/clothingitems");
+} = require("../controllers/clothingItems");
 
 router.get("/", getItems);
 router.delete("/:itemId", auth, deleteItem);
