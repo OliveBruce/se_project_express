@@ -1,17 +1,15 @@
-const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const {
-  REQUEST_CREATED,
   BAD_REQUEST,
   UNAUTHORIZED_ERROR,
   NOT_FOUND,
   CONFLICT,
   DEFAULT,
-  DUPE_ERROR,
 } = require("../utils/constants");
 
-//Create User
+// CREATE USER
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
@@ -60,7 +58,7 @@ const createUser = (req, res) => {
     });
 };
 
-//Get User By ID
+// GET USER BY ID
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .orFail()
@@ -111,7 +109,7 @@ const login = (req, res) => {
           .status(UNAUTHORIZED_ERROR)
           .send({ message: "Incorrect email or password" });
       }
-      return res.status(DEFAULT_ERROR).send({ message: err.message });
+      return res.status(DEFAULT).send({ message: err.message });
     });
 };
 
