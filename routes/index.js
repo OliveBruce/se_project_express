@@ -7,8 +7,8 @@ const { createUser, login } = require("../controllers/users");
 router.use("/users", userRouter);
 router.use("/items", itemRouter);
 
-router.post("/signin", login);
-router.post("/signup", createUser);
+router.post("/login", login);
+router.post("/register", createUser);
 
 router.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Router not found" });
