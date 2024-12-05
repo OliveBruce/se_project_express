@@ -101,7 +101,7 @@ const deleteLike = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.send(item))
+    .then((item) => res.send({ data: item }))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
