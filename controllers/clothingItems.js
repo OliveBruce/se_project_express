@@ -8,11 +8,11 @@ const {
 } = require("../utils/constants");
 
 const createItem = (req, res) => {
-  const { name, weather, imageUrl } = req.body;
+  const { name, imageUrl, weather } = req.body;
   const owner = req.user._id;
 
-  ClothingItem.create({ name, weather, imageUrl, owner })
-    .then((item) => res.status(REQUEST_CREATED).send(item))
+  ClothingItem.create({ name, imageUrl, weather, owner })
+    .then((item) => res.status(REQUEST_CREATED).send({ data: item }))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
