@@ -10,18 +10,24 @@ const {
   DEFAULT,
 } = require("../utils/constants");
 
+const { BadRequestError } = require("../utils/errors/BadRequestError");
+const { NotFoundError } = require("../utils/errors/NotFoundError");
+const { ConflictError } = require("../utils/errors/ConflictError");
+const { UnauthorizedError } = require("../utils/errors/UnauthorizedError");
+const { InternalServerError } = require("../utils/errors/InternalServerError");
+
 // CREATE USER
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   if (!name || !avatar || !email || !password) {
-    return res.status(BAD_REQUEST).send({ message: "All fields are required" });
+    return next(new BadRequestError("Email and password are required"));
   }
 
   return User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
-        throw new Error("User already exists!");
+        return next(new ConflictError("The user already exists"));
       }
       return User.create({
         name,
@@ -47,17 +53,14 @@ const createUser = (req, res) => {
       console.error("ERROR:", err);
 
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid data passed" });
+        return next(new BadRequestError("Invalid data provided"));
       }
-
-      return res.status(DEFAULT).send({
-        message: "An error occurred while creating the user.",
-      });
+      return next(new InternalServerError("Internal Server Error"));
     });
 };
 
 // GET USER BY ID
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => {
@@ -70,28 +73,22 @@ const getCurrentUser = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid ID" });
-      }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: err.message });
+        return next(new NotFoundError("User not found"));
       }
-
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occurred on the server." });
+      if (err.name === "CastError") {
+        return next(new BadRequestError("Invalid user ID format"));
+      }
+      return next(new InternalServerError("Internal server error"));
     });
 };
 
 // LOGIN
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email) {
-    return res.status(BAD_REQUEST).send({ message: "email is required" });
-  }
-  if (!password) {
-    return res.status(BAD_REQUEST).send({ message: "password is required" });
+  if (!email || !password) {
+    return next(new BadRequestError("Email and password are required"));
   }
 
   return User.findUserByCredentials(email, password)
@@ -103,19 +100,15 @@ const login = (req, res) => {
     })
     .catch((err) => {
       if (err.message === "Incorrect email or password") {
-        return res
-          .status(UNAUTHORIZED_ERROR)
-          .send({ message: "Incorrect email or password" });
+        return next(new UnauthorizedError("Incorrect email or password"));
       }
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occurred on the server." });
+      return next(new InternalServerError("Internal server error"));
     });
 };
 
 // UPDATE USER
 
-const updateUserInfo = (req, res) => {
+const updateUserInfo = (req, res, next) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
 
@@ -128,15 +121,12 @@ const updateUserInfo = (req, res) => {
     .then(() => res.status(200).send({ name, avatar }))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return next(new BadRequestError("Invalid user data"));
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: err.message });
+        return next(new NotFoundError("User not found"));
       }
-
-      return res
-        .status(DEFAULT)
-        .send({ message: "An error has occurred on the server." });
+      return next(new InternalServerError("Internal server error"));
     });
 };
 
