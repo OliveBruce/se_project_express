@@ -1,11 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const {
-  REQUEST_CREATED,
-  FORBIDDEN_REQUEST,
-  BAD_REQUEST,
-  NOT_FOUND,
-  DEFAULT,
-} = require("../utils/constants");
+const { REQUEST_CREATED } = require("../utils/constants");
 const { BadRequestError } = require("../utils/errors/BadRequestError");
 const { NotFoundError } = require("../utils/errors/NotFoundError");
 const { InternalServerError } = require("../utils/errors/InternalServerError");
