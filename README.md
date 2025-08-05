@@ -11,4 +11,4 @@ This project uses ESLint to set up a linter to find errors and maintain code con
 
 ## Domain Name -
 
-https://www.whatshouldiwear.epicgamer.org/
+http://whatshouldiwear.awiki.org/
