@@ -12,10 +12,19 @@ mongoose.set("strictQuery", true);
 
 const app = express();
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3001, NODE_ENV, MONGODB_URI } = process.env;
+const DB_URI = NODE_ENV === 'production' 
+  ? MONGODB_URI 
+  : "mongodb://127.0.0.1:27017/wtwr_db";
 
 app.use(express.json());
 app.use(cors());
+
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 
 app.use(requestLogger);
 app.use("/", mainRouter);
@@ -25,14 +34,8 @@ app.use(errors());
 
 app.use(errorHandler);
 
-app.get("/crash-test", () => {
-  setTimeout(() => {
-    throw new Error("Server will crash now");
-  }, 0);
-});
-
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect(DB_URI)
   .then(() => {
     console.log("Connected to DB");
   })
